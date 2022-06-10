@@ -1,4 +1,5 @@
 #include <bits/stdc++.h> 
+// In this We are using floor(N/2)
 int findMajorityElement(int arr[], int n) {
 	int count = 0;
     int candidate = 0;
