@@ -28,44 +28,20 @@
 
 ******************************************************************************/
 
-#include <bits/stdc++.h>
-
-graphNode *dfs(graphNode *n, unordered_map<graphNode *, graphNode *> &mp)
-{
-
-    // the given node is not checked
-
-    mp[n] = new graphNode(n->data);
-
-    // now iterate through its neighbours
-
-    vector<graphNode *> v;
-
-    for (auto i : n->neighbours)
-    {
-        // it is a neighbour which has been checked
-        // checked means earlier it was discovered and it has all its
-        // neighbour information as a vector
-        if (mp.find(i) != mp.end())
-            v.push_back(i);
-
-        // the given neighbour has not been discovered earlier
-        else
-        {
-            v.push_back(dfs(i, mp));
+graphNode* dfs(graphNode* node, unordered_map<graphNode*, graphNode*>& hmap, int parent){
+    hmap[node] = new graphNode(node->data);
+    for(auto &adj : node->neighbours){
+        if(hmap.find(adj) == hmap.end()){
+            hmap[node]->neighbours.push_back( dfs(adj, hmap, node->data) );
+        }else{
+            hmap[node]->neighbours.push_back(hmap[adj]);
         }
     }
-
-    n->neighbours = v;
-    return n;
+    return hmap[node];
 }
 
 graphNode *cloneGraph(graphNode *node)
 {
-
-    unordered_map<graphNode *, graphNode *> mp;
-
-    if (!node)
-        return NULL;
-    return dfs(node, mp);
+    unordered_map<graphNode*, graphNode*> hmap;
+    return dfs(node, hmap, -1);
 }
